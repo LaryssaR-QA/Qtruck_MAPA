@@ -1,3 +1,5 @@
+import loginPage from '../support/pages/Login'
+import mapPage from '../support/pages/Map'
 
 describe('Login', () => {
 
@@ -7,8 +9,12 @@ describe('Login', () => {
       instagram: '@LaryMortis',
       password: '1234'
     }
-    cy.login(user)
-    cy.loggedUser(user.name)
+
+    loginPage.go()
+    loginPage.form(user)
+    loginPage.submit()
+
+    mapPage.loggeUser(user.name)
   })
 
   it('Não deve logar com senha incorreta', () => {
@@ -16,8 +22,13 @@ describe('Login', () => {
       instagram: '@LaryMortis',
       password: 'ERRO'
     }
-    cy.login(user)
-    cy.modalHaveText('Credenciais inválidas, tente novamente!')
+
+    loginPage.go()
+    loginPage.form(user)
+    loginPage.submit()
+
+    loginPage.modal
+    loginPage.modal.haveText('Credenciais inválidas, tente novamente!')
   })
 
   it('Não deve logar com Instagram inexistente', () => {
@@ -25,9 +36,44 @@ describe('Login', () => {
       instagram: '@LaryMortis',
       password: 'ERRO'
     }
-    cy.login(user)
-    cy.modalHaveText('Credenciais inválidas, tente novamente!')
+    loginPage.go()
+    loginPage.form(user)
+    loginPage.submit()
+
+    loginPage.modal.haveText('Credenciais inválidas, tente novamente!')
   })
+
+  it('instagram deve ser obrigatório', () =>{
+    const user = {
+      password: '1234'
+    }
+    loginPage.go()
+    loginPage.form(user)
+    loginPage.submit()
+
+    loginPage.modal.haveText('Por favor, informe o seu código do Instagram!')
+  })
+
+  it('senha deve ser obrigatório', () =>{
+    const user = {
+      instagram: '@LaryMortis'
+    }
+    loginPage.go()
+    loginPage.form(user)
+    loginPage.submit()
+
+    loginPage.modal.haveText('Por favor, informe a sua senha secreta!')
+  })
+
+  it('todos os campos devem ser obrigatório', () =>{
+    const user = {}
+
+    loginPage.go()
+    loginPage.form(user)
+    loginPage.submit()
+    loginPage.modal.haveText('Por favor, informe suas credenciais!')
+  })
+
 })
 
 

@@ -1,4 +1,4 @@
-import SignupPage from "../support/pages/Signup"
+import SignupPage from '../support/pages/Signup'
 
 describe('Signup', ()=> {
 
@@ -9,6 +9,9 @@ describe('Signup', ()=> {
             instagram: '@becca_milano',
             password: 'pwd123'
         }
+        cy.deleteMany({instagram: user.instagram}, {collection: 'users'}).then(res => {
+            cy.log(res);
+        });//comando do banco de dados usando o yarn
 
         SignupPage.go()
         SignupPage.form(user)
@@ -16,9 +19,6 @@ describe('Signup', ()=> {
 
         SignupPage.modal.haveText('Agora você pode recomendar e/ou avaliar Food trucks.')
     })
-
-
-
 
 
 })
